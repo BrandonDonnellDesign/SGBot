@@ -5,8 +5,6 @@ module.exports = {
     description: 'Grabs Current Server Population',
     guildOnly: false,
     async execute(message,args, Discord) {
-        //if args1 is not empty set id equal to args1 if empty set id equal to 1
-        let id = args[0] || 1;
 
         server = await axios.get(`${process.env.LOCAL_IP}/server/population`).then(function (response) {
             return response.data;
