@@ -33,7 +33,7 @@ module.exports = {
     
                 channel.send(embed);
 
-                axios.post(`${process.env.LOCAL_IP}/team/4/chat`, {
+                axios.post(`${process.env.LOCAL_IP2}/team/4/chat`, {
                     msg: `${title}: ${description}`,
                   })
             }
