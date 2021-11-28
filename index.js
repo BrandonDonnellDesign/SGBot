@@ -5,6 +5,8 @@ const prefix = process.env.PREFIX;
 const token = process.env.DISCORD_TOKEN
 const mongoose = require('mongoose');
 
+const axios = require("axios");
+
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
@@ -22,6 +24,31 @@ for (const folder of commandFolders) {
 client.once('ready', () => {
 	console.log('Ready!');
 	client.user.setActivity('with code!', {type: "PLAYING"});
+	async function mapMarkerPolling() {
+		/* Get the map markers from the server. */
+		const msg = await axios.get(`${process.env.LOCAL_IP}/server/4/map/`).then(function (response) {
+			return response.data.response.mapMarkers.markers;
+		});
+		let channel = client.channels.cache.get("805807053335166978");
+		/* Update notifications */
+		for (const notification of notifications) {
+			notification.execute(msg,channel, client);
+		}
+		
+		setTimeout(mapMarkerPolling, 10000);
+	}
+	
+	var notifications = [];
+	
+	/* Extract all the notification files from the notifications directory. */
+	const notificationFiles = fs.readdirSync("./notifications").filter(file => file.endsWith(".js"));
+	/* Add the file to notifications list. */
+	for (const file of notificationFiles) {
+		const notification = require("./notifications/" + file);
+		notifications.push(notification);
+	}
+	
+	mapMarkerPolling()
 });
 
 client.on('message', message => {
