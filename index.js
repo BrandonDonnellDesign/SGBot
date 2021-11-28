@@ -29,7 +29,7 @@ client.once('ready', () => {
 		const msg = await axios.get(`${process.env.LOCAL_IP}/server/4/map/`).then(function (response) {
 			return response.data.response.mapMarkers.markers;
 		});
-		let channel = client.channels.cache.get("805807053335166978");
+		let channel = client.channels.cache.get("914661140133462026");
 		/* Update notifications */
 		for (const notification of notifications) {
 			notification.execute(msg,channel, client);
