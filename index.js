@@ -26,7 +26,7 @@ client.once('ready', () => {
 	client.user.setActivity('with code!', {type: "PLAYING"});
 	async function mapMarkerPolling() {
 		/* Get the map markers from the server. */
-		const msg = await axios.get(`${process.env.LOCAL_IP}/server/4/map/`).then(function (response) {
+		const msg = await axios.get(`${process.env.LOCAL_IP2}/server/4/map/`).then(function (response) {
 			return response.data.response.mapMarkers.markers;
 		});
 		let channel = client.channels.cache.get("914661140133462026");
