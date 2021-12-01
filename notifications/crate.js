@@ -16,7 +16,8 @@ module.exports = {
         for (let marker of msg) {
             if (marker.type === "Crate") {
                 crateCounter++;
-            }
+            } 
+            
         }
 
         if (crateCounter > numberOfCurrentCrates) {

@@ -23,23 +23,29 @@ for (const folder of commandFolders) {
 
 client.once('ready', () => {
 	console.log('Ready!');
-	client.user.setActivity('with code!', {type: "PLAYING"});
+	client.user.setActivity('with code!', {
+		type: "PLAYING"
+	});
 	async function mapMarkerPolling() {
-		/* Get the map markers from the server. */
-		const msg = await axios.get(`${process.env.LOCAL_IP2}/server/4/map/`).then(function (response) {
-			return response.data.response.mapMarkers.markers;
-		});
-		let channel = client.channels.cache.get("914661140133462026");
-		/* Update notifications */
-		for (const notification of notifications) {
-			notification.execute(msg,channel, client);
+		try {
+			/* Get the map markers from the server. */
+			const msg = await axios.get(`${process.env.LOCAL_IP2}/server/4/map/`).then(function (response) {
+				return response.data.response.mapMarkers.markers;
+			});
+			let channel = client.channels.cache.get("914661140133462026");
+			/* Update notifications */
+			for (const notification of notifications) {
+				notification.execute(msg, channel, client);
+			}
+		} catch (error) {
+			console.log(error);
 		}
-		
+
 		setTimeout(mapMarkerPolling, 10000);
 	}
-	
+
 	var notifications = [];
-	
+
 	/* Extract all the notification files from the notifications directory. */
 	const notificationFiles = fs.readdirSync("./notifications").filter(file => file.endsWith(".js"));
 	/* Add the file to notifications list. */
@@ -47,7 +53,7 @@ client.once('ready', () => {
 		const notification = require("./notifications/" + file);
 		notifications.push(notification);
 	}
-	
+
 	mapMarkerPolling()
 });
 
@@ -57,8 +63,8 @@ client.on('message', message => {
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
 	const commandName = args.shift().toLowerCase();
 
-	const command = client.commands.get(commandName)
-		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+	const command = client.commands.get(commandName) ||
+		client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 	if (!command) return;
 
@@ -84,7 +90,7 @@ client.on('message', message => {
 mongoose.connect(process.env.MONGODB, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
-}).then(()=>[
+}).then(() => [
 	console.log('Connected to Database!')
 ]).catch((err) => {
 	console.log(err)
